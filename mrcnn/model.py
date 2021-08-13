@@ -17,11 +17,16 @@ from collections import OrderedDict
 import multiprocessing
 import numpy as np
 import tensorflow as tf
-import keras
-import keras.backend as K
-import keras.layers as KL
-import keras.engine as KE
-import keras.models as KM
+#from tensorflow import keras
+#import keras
+import tensorflow.keras.backend as K
+import tensorflow.keras.layers as KL
+import tensorflow.keras.engine as KE
+import tensorflow.keras.models as KM
+#import keras.backend as K
+#import keras.layers as KL
+#import keras.engine as KE
+#import keras.models as KM
 
 from mrcnn import utils
 
@@ -2352,6 +2357,7 @@ class MaskRCNN():
                                         histogram_freq=0, write_graph=True, write_images=False),
             keras.callbacks.ModelCheckpoint(self.checkpoint_path,
                                             verbose=0, save_weights_only=True),
+            keras.callbacks.EarlyStopping(monitor="loss",patience=10,verbose=0,mode="min"),
         ]
 
         # Add custom callbacks to the list
@@ -2367,7 +2373,7 @@ class MaskRCNN():
         # Work-around for Windows: Keras fails on Windows when using
         # multiprocessing workers. See discussion here:
         # https://github.com/matterport/Mask_RCNN/issues/13#issuecomment-353124009
-        if os.name is 'nt':
+        if os.name == 'nt':
             workers = 0
         else:
             workers = multiprocessing.cpu_count()
